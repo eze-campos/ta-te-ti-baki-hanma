@@ -59,7 +59,7 @@ body {
   justify-content: center;
   min-width: 320px;
   min-height: 100vh;
-  background: url('/src/assets/baki-back.png') center/cover fixed;
+  background: url('./assets/baki-back.png') center/cover fixed;
   background-color: #1a1a1a;
   color: #fff;
   animation: fadeIn 1s ease-out;
