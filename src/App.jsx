@@ -88,10 +88,13 @@ function App () {
   }, [winner])
 
   const resetGame = () => {
+    // Limpiar el estado del juego
     setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
     setWinner(null)
     setWinnerImage(null)
+    setXWins(0)
+    setOWins(0)
 
     // Detener cualquier audio que esté reproduciéndose
     bakiAudioRef.pause()
@@ -99,33 +102,38 @@ function App () {
     yujiroAudioRef.pause()
     yujiroAudioRef.currentTime = 15
 
+    // Limpiar el almacenamiento local
     resetGameStorage()
   }
 
   const updateBoard = (index) => {
-    // no actualizamos esta posición
-    // si ya tiene algo
+    // no actualizamos esta posición si ya tiene algo o si ya hay un ganador
     if (board[index] || winner) return
+
     // actualizar el tablero
     const newBoard = [...board]
     newBoard[index] = turn
     setBoard(newBoard)
+
     // cambiar el turno
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
-    // guardar aqui partida
+
+    // guardar partida
     saveGameToStorage({
       board: newBoard,
       turn: newTurn
     })
+
     // revisar si hay ganador
     const newWinner = checkWinnerFrom(newBoard)
     if (newWinner) {
       confetti()
       setWinner(newWinner)
+      // Actualizar contadores
       if (newWinner === TURNS.X) {
         setXWins(prev => prev + 1)
-      } else {
+      } else if (newWinner === TURNS.O) {
         setOWins(prev => prev + 1)
       }
     } else if (checkEndGame(newBoard)) {
